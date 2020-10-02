@@ -13,7 +13,7 @@ export class PhotoEntity {
     image_url: string;
 
     @Column('text')
-    categoty: string;
+    category: string;
 
     @CreateDateColumn()
     created: Date;

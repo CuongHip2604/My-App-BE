@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
 
-@Catch()
+@Catch(HttpException)
 export class HttpErrorFilter implements ExceptionFilter {
     catch(exception: HttpException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
@@ -13,7 +13,7 @@ export class HttpErrorFilter implements ExceptionFilter {
             timestamp: new Date().toISOString(),
             path: rq.url,
             method: rq.method,
-            message: exception.message.error
+            message: exception.message
         }
         rs.status(status).json(errorResponse);
     }

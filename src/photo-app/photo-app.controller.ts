@@ -1,40 +1,50 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { ApiProperty, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes } from '@nestjs/common';
+import { ApiBearerAuth, ApiProperty, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiResult } from 'src/shared/api-result';
+import { AuthGuard } from 'src/shared/auth.gaurd';
+import { ValidationPipe } from 'src/shared/validator.pipe';
 import { PhotoDTO } from './model/photo-app.dto';
 import { PhotoAppService } from './photo-app.service';
 
 @Controller('photo-app')
+@ApiTags('photo-app')
 export class PhotoAppController {
 
     constructor(private photoService: PhotoAppService) {}
 
     @Get()
-    @ApiTags('photo-app')
-    getPhotos() {
-        return this.photoService.getPhotos();
+    @UseGuards(new AuthGuard())
+    @ApiBearerAuth()
+    async getPhotos() {
+        return (new ApiResult).success(await this.photoService.getPhotos());
     }
 
     @Post('add-new')
-    @ApiTags('photo-app')
-    addNew(@Body() data: PhotoDTO) {
-        return this.photoService.addNew(data);
+    @UsePipes(new ValidationPipe())
+    @ApiBearerAuth()
+    @UseGuards(new AuthGuard())
+    async addNew(@Body() data: PhotoDTO) {
+        return (new ApiResult).success(await this.photoService.addNew(data));
     }
 
     @Get(':id')
-    @ApiTags('photo-app')
-    getPhotoById(@Param('id') id: number) {
-        return this.photoService.getPhotoById(id);
+    @ApiBearerAuth()
+    @UseGuards(new AuthGuard())
+    async getPhotoById(@Param('id') id: number) {
+        return (new ApiResult).success(await this.photoService.getPhotoById(id));
     }
 
     @Put('update/:id')
-    @ApiTags('photo-app')
-    updatePhoto(@Param('id') id: number, @Body() data: PhotoDTO) {
-        return this.photoService.updatePhoto(id, data)
+    @UsePipes(new ValidationPipe())
+    @ApiBearerAuth()
+    @UseGuards(new AuthGuard())
+    async updatePhoto(@Param('id') id: number, @Body() data: PhotoDTO) {
+        return (new ApiResult).success(await this.photoService.updatePhoto(id, data))
     }
 
     @Delete('delete/:id')
-    @ApiTags('photo-app')
-    deletePhoto(@Param('id') id: number) {
-        return this.photoService.deletePhoto(id)
+    @ApiBearerAuth()
+    async deletePhoto(@Param('id') id: number) {
+        return (new ApiResult).success(await this.photoService.deletePhoto(id))
     }
 }

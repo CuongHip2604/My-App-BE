@@ -7,8 +7,8 @@ export class TodoEntity {
     @Column('text')
     taskName: string;
 
-    @Column('text')
-    isActive: string;
+    @Column()
+    isActive: boolean;
 
     @CreateDateColumn()
     created: Date;

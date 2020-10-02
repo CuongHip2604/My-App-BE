@@ -5,5 +5,5 @@ export class TodoDTO {
     taskName: string;
     
     @ApiProperty()
-    isActive: string;
+    isActive: boolean;
 }

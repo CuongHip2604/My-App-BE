@@ -7,9 +7,10 @@ import { TodoAppModule } from './todo-app/todo-app.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { HttpErrorFilter } from './shared/http-error.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), PhotoAppModule, TodoAppModule],
+  imports: [TypeOrmModule.forRoot(), PhotoAppModule, TodoAppModule, UserModule],
   controllers: [AppController],
   providers: [AppService,
     {

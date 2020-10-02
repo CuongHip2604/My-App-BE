@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Observable, of } from 'rxjs';
 import { Repository } from 'typeorm';
@@ -20,16 +20,28 @@ export class PhotoAppService {
     }
 
     async getPhotoById(id: number) {
-        return await this.photoRepository.findOne({where: {id}});
+        const photo = await this.photoRepository.findOne({where: {id}});
+        if (!photo) {
+            throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        }
+        return photo;
     }
 
     async updatePhoto(id: number, data: PhotoDTO) {
+        const photo = await this.photoRepository.findOne({where: {id}});
+        if (!photo) {
+            throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        }
         await this.photoRepository.update({id}, data);
-        return await this.photoRepository.findOne({id});
+        return photo;
     }
 
     async deletePhoto(id: number) {
+        const photo = await this.photoRepository.findOne({where: {id}});
+        if (!photo) {
+            throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+        }
         await this.photoRepository.delete({id});
-        return {deleted: true};
+        return photo;
     }
 }
